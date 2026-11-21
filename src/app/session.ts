@@ -1,6 +1,7 @@
 import { reactive, onUnmounted } from "vue";
 import { createGame } from "../shared/initial";
 import { expire, arrive } from "../features/orders";
+import { tickDelivery } from "../features/delivery";
 import { closeShift, saveBest, readBest } from "../features/ledger";
 export function useSession() {
   const game = reactive(createGame(readBest()));
@@ -20,6 +21,7 @@ export function useSession() {
       );
       expire(game);
       if (Math.round(game.time * 10) % 180 === 0) arrive(game);
+      tickDelivery(game);
       if (game.time >= game.duration) {
         closeShift(game);
         saveBest(game);

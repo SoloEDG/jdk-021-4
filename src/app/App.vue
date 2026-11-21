@@ -5,6 +5,7 @@ import { OrdersPanel } from "../features/orders";
 import { PantryPanel } from "../features/pantry";
 import { KitchenPanel } from "../features/kitchen";
 import { ServicePanel } from "../features/service";
+import { DeliveryPanel } from "../features/delivery";
 import { LedgerPanel, ResultOverlay, totals } from "../features/ledger";
 const { game, toggle, restart } = useSession();
 </script>
@@ -89,6 +90,7 @@ const { game, toggle, restart } = useSession();
           @command="(c) => dispatch(game, c)"
         /><ServicePanel :game="game" @command="(c) => dispatch(game, c)" />
       </div>
+      <DeliveryPanel :game="game" @command="(c) => dispatch(game, c)" />
       <div class="notice" role="status">
         <span>✦ 主厨提示</span>{{ game.notice }}
       </div>

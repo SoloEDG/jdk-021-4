@@ -6,7 +6,7 @@ defineProps<{ game: Game }>();
 <template>
   <section class="ledger">
     <div>
-      <span class="eyebrow">05 / TODAY'S TAKINGS</span>
+      <span class="eyebrow">06 / TODAY'S TAKINGS</span>
       <h2>营业手账</h2>
     </div>
     <div class="ledger-stat">

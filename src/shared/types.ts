@@ -40,7 +40,88 @@ export interface Entry {
   time: number;
   label: string;
   amount: number;
-  kind: "sale" | "waste" | "miss" | "supply";
+  kind: "sale" | "waste" | "miss" | "supply" | "fee";
+}
+export type DeliveryStatus =
+  | "incoming"
+  | "accepted"
+  | "packed"
+  | "assigned"
+  | "picked"
+  | "delivered"
+  | "cancelled";
+export interface DeliveryOrder {
+  id: number;
+  recipe: RecipeId;
+  customer: string;
+  node: number;
+  price: number;
+  arrived: number;
+  acceptBy: number;
+  pickupBy: number;
+  deliverBy: number;
+  status: DeliveryStatus;
+  parcelId: number | null;
+  riderId: number | null;
+}
+export type ParcelHolder = "kitchen" | "customer" | "trash" | number;
+export interface Parcel {
+  id: number;
+  orderId: number;
+  dishId: number;
+  recipe: RecipeId;
+  packedAt: number;
+  qualityAtPack: number;
+  insulated: boolean;
+  holder: ParcelHolder;
+}
+export interface Stop {
+  node: number;
+  kind: "pickup" | "dropoff";
+  orderId: number;
+}
+export interface Leg {
+  from: number;
+  to: number;
+  depart: number;
+  arrive: number;
+}
+export interface Rider {
+  id: number;
+  name: string;
+  capacity: number;
+  at: number;
+  leg: Leg | null;
+  parcels: number[];
+  stops: Stop[];
+  departAt: number | null;
+  hold: boolean;
+}
+export interface ClosurePlanItem {
+  a: number;
+  b: number;
+  at: number;
+  until: number;
+  fired: boolean;
+  label: string;
+}
+export interface ClosedEdge {
+  a: number;
+  b: number;
+  until: number;
+}
+export interface RerouteOption {
+  strategy: "deadline" | "value";
+  loss: number;
+  eta: number;
+  path: number[];
+}
+export interface ClosureAlert {
+  a: number;
+  b: number;
+  until: number;
+  riderId: number;
+  options: RerouteOption[];
 }
 export interface Game {
   time: number;
@@ -59,6 +140,14 @@ export interface Game {
   combo: number;
   served: number;
   missed: number;
+  deliveryOrders: DeliveryOrder[];
+  parcels: Parcel[];
+  riders: Rider[];
+  closurePlan: ClosurePlanItem[];
+  closedEdges: ClosedEdge[];
+  closureAlert: ClosureAlert | null;
+  nextDeliveryAt: number;
+  delivered: number;
   notice: string;
   best: number;
 }
@@ -72,4 +161,11 @@ export type Command =
   | { type: "select-dish"; id: number }
   | { type: "serve" }
   | { type: "discard"; id: number }
-  | { type: "restock"; ingredient: Ingredient };
+  | { type: "restock"; ingredient: Ingredient }
+  | { type: "accept-delivery"; id: number }
+  | { type: "pack"; order: number; insulated: boolean }
+  | { type: "assign"; order: number; rider: number }
+  | { type: "depart"; rider: number }
+  | { type: "cancel-delivery"; id: number }
+  | { type: "reroute"; strategy: "deadline" | "value" }
+  | { type: "dismiss-closure" };

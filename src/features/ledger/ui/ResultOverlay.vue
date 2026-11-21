@@ -13,7 +13,10 @@ defineEmits<{ restart: [] }>();
       <p>
         本场净收益 <b>¥{{ totals(game).net }}</b>
       </p>
-      <p>完成 {{ game.served }} 单 · 离店 {{ game.missed }} 位</p>
+      <p>
+        完成 {{ game.served }} 单 · 离店 {{ game.missed }} 位 · 外卖送达
+        {{ game.delivered }} 单
+      </p>
       <button @click="$emit('restart')">再开一家好餐厅 ↗</button>
     </section>
   </div>

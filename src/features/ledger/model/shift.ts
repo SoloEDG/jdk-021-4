@@ -1,11 +1,13 @@
 import type { Game } from "../../../shared/types";
 import { totals } from "../lib/totals";
+import { settleDeliveries } from "../../delivery/model/orders";
 export function closeShift(g: Game) {
   g.running = false;
   g.ended = true;
   g.portions = [];
   g.dishes = [];
   g.stoves.forEach((s) => (s.portion = null));
+  settleDeliveries(g);
   g.best = Math.max(g.best, totals(g).net);
   g.notice = "午市结束，辛苦了，主厨！";
 }
